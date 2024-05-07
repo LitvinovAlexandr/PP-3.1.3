@@ -2,7 +2,6 @@ package ru.itmentor.spring.boot_security.demo.models;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.itmentor.spring.boot_security.demo.services.UserDetailsImpl;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -10,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User extends UserDetailsImpl {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +28,7 @@ public class User extends UserDetailsImpl {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -88,6 +87,42 @@ public class User extends UserDetailsImpl {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Set<Role> getRoles() {

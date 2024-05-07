@@ -5,9 +5,24 @@ import org.springframework.stereotype.Repository;
 import ru.itmentor.spring.boot_security.demo.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername (String username);
+    User findByUsername(String username);
+
+    User save(User user);
+
+    List<User> findAll();
+
+    Optional<User> findById(long id);
+
+    List<User> findByDepartment(String department);
+
+    List<User> findBySalary(int salary);
+
+    void deleteById(long id);
+
+    void delete(User user);
 }
 

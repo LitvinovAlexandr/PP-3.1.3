@@ -6,41 +6,33 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>Edit User</h1>
-    <form th:action="@{/admin/users/update}" th:object="${user}" method="post">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" th:field="*{name}">
-        </div>
-        <div class="form-group">
-            <label for="surname">Surname:</label>
-            <input type="text" class="form-control" id="surname" th:field="*{surname}">
-        </div>
-        <div class="form-group">
-            <label for="department">Department:</label>
-            <input type="text" class="form-control" id="department" th:field="*{department}">
-        </div>
-        <div class="form-group">
-            <label for="salary">Salary:</label>
-            <input type="number" class="form-control" id="salary" th:field="*{salary}">
-        </div>
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" class="form-control" id="username" th:field="*{username}">
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" th:field="*{password}">
-        </div>
-        <div class="form-group">
-            <label for="roles">Roles:</label>
-            <select multiple class="form-control" id="roles" th:field="*{roles}" th:options="${allRoles}">
-                <option th:each="role : ${allRoles}" th:value="${role}" th:text="${role.name}"></option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
+<h1>Edit User</h1>
+<a href="/admin/users" class="back-button">Back</a>
+<form action="/admin/editUser/{id}" th:action="@{/admin/editUser/{id}(id=${user.id})}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{id}">
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}">
+
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname" th:field="*{surname}">
+
+    <label for="department">Department:</label>
+    <input type="text" id="department" th:field="*{department}">
+
+    <label for="salary">Salary:</label>
+    <input type="number" id="salary" th:field="*{salary}">
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" th:field="*{username}">
+
+    <!--    <label for="password">Password:</label>-->
+    <!--    <input type="password" id="password" th:field="*{password}">-->
+
+    <input type="submit" value="Save">
+</form>
+<div class="logout-button">
+    <a th:href="@{/logout}" class="button">Logout</a>
 </div>
 </body>
 </html>

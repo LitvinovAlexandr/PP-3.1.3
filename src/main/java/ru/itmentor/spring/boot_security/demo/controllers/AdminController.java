@@ -10,11 +10,14 @@ import ru.itmentor.spring.boot_security.demo.services.RoleService;
 import ru.itmentor.spring.boot_security.demo.services.UserService;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final String REDIRECT = "redirect:/admin/users";
     private final UserService userService;
     private final RoleService roleService;
 
@@ -37,29 +40,37 @@ public class AdminController {
         return "addUser";
     }
 
-    @PostMapping("/users/save")
-    public String saveUser(@ModelAttribute("user") User user) {
+    @PostMapping("/addUser")
+    public String addUser(@ModelAttribute User user, @RequestParam("selectedRoles") List<String> selectedRoles) {
+        Set<Role> userRoles = selectedRoles.stream()
+                .map(roleName -> {
+                    Role role = roleService.findRoleByName(roleName);
+                    return role;
+                })
+                .collect(Collectors.toSet());
+        user.setRoles(userRoles);
+
         userService.saveUser(user);
-        return "redirect:/admin/users";
+        return REDIRECT;
     }
 
-    @GetMapping("/users/edit/{id}")
-    public String editUserForm(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/editUser/{id}")
+    public String showEditUserForm(@PathVariable("id") long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
-        model.addAttribute("allRoles", roleService.getAllRoles());
         return "editUser";
     }
 
-    @PostMapping("/users/update")
-    public String updateUser(@ModelAttribute("user") User user, Long id) {
-        userService.updateUser(user, id);
-        return "redirect:/admin/users";
+    @PostMapping("/editUser/{id}")
+    public String editUser(@ModelAttribute("user") User user) {
+        userService.updateUser(user);
+        return REDIRECT;
     }
 
-    @GetMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-        return "redirect:/admin/users";
+    @PostMapping("/deleteUser/{id}")
+    public String deleteUser(@PathVariable long id, Model model) {
+        userService.deleteUserById(id);
+        model.addAttribute("message", "Пользователь удален успешно");
+        return REDIRECT;
     }
 }

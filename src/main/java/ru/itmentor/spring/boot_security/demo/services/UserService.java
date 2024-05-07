@@ -14,8 +14,8 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class UserService extends UserDetailsImpl implements UserDetailsService {
-    private  UserRepository userRepository;
+public class UserService implements UserDetailsService {
+    private UserRepository userRepository;
     private RoleService roleService;
 
     public UserService(UserRepository userRepository) {
@@ -28,38 +28,44 @@ public class UserService extends UserDetailsImpl implements UserDetailsService {
     }
 
     public User getUserById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        return userOptional.orElse(null);
+        Optional<User> user = userRepository.findById(id);
+        return user.get();
+    }
+
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public List<User> getUsersByDepartment(String department) {
+        return userRepository.findByDepartment(department);
+    }
+
+    public List<User> getUsersWithSalary(int salary) {
+        return userRepository.findBySalary(salary);
     }
 
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public void updateUser(User user, Long id) {
-
-        User existingUser = userRepository.getById(id);
-        existingUser.setName(user.getName());
-        existingUser.setSurname(user.getSurname());
-        existingUser.setDepartment(user.getDepartment());
-        existingUser.setSalary(user.getSalary());
-        existingUser.setUsername(user.getUsername());
-        existingUser.setPassword(user.getPassword()); // Возможно, нужно добавить логику шифрования пароля
+    public User updateUser(User user) {
+        String currentPassword = userRepository.getById(user.getId()).getPassword();
+        user.setPassword(currentPassword);
+        return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        // Проверяем, существует ли пользователь с заданным идентификатором
-        Optional<User> userOptional = userRepository.findById(id);
-            // Если пользователь существует, удаляем его из базы данных
-            userRepository.delete(userOptional.get());
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
+
+    public void deleteUserById(long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username));
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-        return new UserDetails(user.get());
+        return user.orElseThrow(() -> new UsernameNotFoundException("User not found with username " + username));
     }
 }
