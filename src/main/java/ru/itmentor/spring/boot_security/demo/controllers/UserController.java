@@ -11,7 +11,7 @@ import ru.itmentor.spring.boot_security.demo.services.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -21,10 +21,10 @@ public class UserController {
         this.userService = userService;
         this.roleService = roleService;
     }
-    @GetMapping("/users")
+    @GetMapping("/user")
     public String getAllUsers(Model model) {
         List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "users";
+        model.addAttribute("user", users);
+        return "user";
     }
 }

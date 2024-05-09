@@ -1,35 +1,130 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add User</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Courier;
+            background-color: #f4ebdb;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #8e9b97;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header .back-button,
+        .header .logout-button {
+            background-color: #537072;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+            border: 1px solid #537072;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header .back-button:hover,
+        .header .logout-button:hover {
+            background-color: #2c4a52;
+        }
+        .header .back-button {
+            margin-right: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #2C4A52FF; /* Цвет текста как у кнопок */
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"], select {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        select {
+            width: 100%;
+        }
+        .button {
+            background-color: #537072;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #2c4a52;
+        }
+    </style>
 </head>
 <body>
-<a href="/admin/users" class="back-button">Back</a>
-<h1>Add User</h1>
-<form action="/admin/addUser" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!-- CSRF токен -->
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name"><br>
-    <label for="surname">Surname:</label>
-    <input type="text" id="surname" name="surname"><br>
-    <label for="department">Department:</label>
-    <input type="text" id="department" name="department"><br>
-    <label for="salary">Salary:</label>
-    <input type="number" id="salary" name="salary"><br>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br>
-    <label for="roles">Roles:</label>
-    <select id="roles" name="selectedRoles" multiple>
-        <option th:each="role : ${allRoles}" th:value="${role.name}" th:text="${role.name}"></option>
-    </select><br>
-    <button type="submit">Add User</button>
-</form>
-<div class="logout-button">
-    <a th:href="@{/logout}" class="button">Logout</a>
+<div class="header">
+    <a href="/admin/users" class="back-button">Back</a>
+
+    <a href="/logout" class="logout-button">Logout</a>
+</div>
+<div class="container">
+    <h1>Add User</h1>
+
+    <!-- Форма для добавления нового пользователя -->
+    <form action="/admin/addUser" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="surname">Surname:</label>
+        <input type="text" id="surname" name="surname" required>
+
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department" required>
+
+        <label for="salary">Salary:</label>
+        <input type="text" id="salary" name="salary" required>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="roles">Roles:</label>
+        <select id="roles" name="selectedRoles" multiple>
+            <option th:each="role : ${allRoles}" th:value="${role.name}" th:text="${role.name}"></option>
+        </select><br>
+
+        <!-- Кнопка сохранения -->
+        <button type="submit" class="button">Save</button>
+    </form>
 </div>
 </body>
 </html>

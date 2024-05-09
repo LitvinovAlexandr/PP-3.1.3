@@ -1,15 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User List</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
     <style>
-        /* Добавьте свой собственный стиль */
+        body {
+            font-family: Courier;
+            margin: 0;
+            padding: 0;
+            background-color: #f4ebdb;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #2c4a52; /* цвет надписи Users */
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto; /* центрирование таблицы */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.55); /* тень для таблицы */
+            border-radius: 7px;
+            overflow: hidden; /* чтобы скругленные углы не выходили за границы тени */
+        }
+        th, td {
+            border: 1px solid #000; /* черные границы ячеек таблицы */
+            padding: 12px;
+            text-align: left;
+            vertical-align: top; /* выравнивание по верхнему краю */
+        }
+        th {
+            background-color: #537072; /* цвет заголовков таблицы */
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* цвет четных строк таблицы */
+        }
+        a.button {
+            display: inline-block;
+            background-color: #537072;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-left: 20px; /* Отступ слева */
+        }
+        a.button:hover {
+            background-color: #2c4a52;
+        }
+        form.delete-form {
+            display: inline-block;
+            margin-top: 8px; /* Add margin to match the height of Update button */
+        }
+        form.delete-form input[type="submit"] {
+            background-color: #963535;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px; /* Match the padding of Update button */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 0;
+            cursor: pointer;
+        }
+        form.delete-form input[type="submit"]:hover {
+            background-color: #5b1e1e;
+        }
     </style>
 </head>
 <body>
-<h1>User List</h1>
+<h1>Users</h1>
+
+<!-- Кнопка добавления нового пользователя -->
+<a class="button" href="/admin/addUser" style="margin-left: 160px;">Add New User</a>
+
+<!-- Таблица со списком всех пользователей -->
 <table>
     <thead>
     <tr>
@@ -19,43 +90,29 @@
         <th>Department</th>
         <th>Salary</th>
         <th>Username</th>
-        <th>Action</th>
-        <th>Delete</th>
+        <th style="width: 210px;">Actions</th> <!-- Установка фиксированной ширины для столбца Actions -->
     </tr>
     </thead>
     <tbody>
-    <!-- Здесь будут данные о пользователях -->
-    <!-- Пример данных -->
+    <!-- Итерация по списку пользователей и отображение их данных -->
     <tr th:each="user : ${users}">
-        <td th:text="${user.id}" style="border: 1px solid #343a40;"></td>
-        <td th:text="${user.name}" style="border: 1px solid #343a40;"></td>
-        <td th:text="${user.surname}" style="border: 1px solid #343a40;"></td>
-        <td th:text="${user.department}" style="border: 1px solid #343a40;"></td>
-        <td th:text="${user.salary}" style="border: 1px solid #343a40;"></td>
-        <td th:text="${user.username}" style="border: 1px solid #343a40;"></td>
-        <td style="border: 1px solid #343a40;">
-            <form th:action="@{/admin/editUser/{id}(id=${user.id})}" method="get">
-                <button type="submit">Edit</button>
-            </form>
-        </td>
-        <td style="border: 1px solid #343a40;">
-            <form th:action="@{/admin/deleteUser/{id}(id=${user.id})}" method="post">
-                <button type="submit">Delete</button>
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.department}"></td>
+        <td th:text="${user.salary}"></td>
+        <td th:text="${user.username}"></td>
+        <td>
+            <!-- Кнопка для редактирования пользователя -->
+            <a class="button" th:href="@{/admin/editUser/{id}(id=${user.id})}" style="margin-right: 5px;">Edit</a>
+
+            <!-- Форма для удаления пользователя -->
+            <form class="delete-form" th:action="@{/admin/deleteUser/{id}(id=${user.id})}" method="post">
+                <input type="submit" value="Delete">
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<div style="text-align: center;">
-    <form action="/admin" method="get" style="display: inline-block;">
-        <button type="submit">Back</button>
-    </form>
-    <form action="/admin/addUser" method="get" style="display: inline-block;">
-        <button type="submit">Add a new user</button>
-    </form>
-</div>
-<div class="logout-button">
-    <a th:href="@{/logout}" class="button">Logout</a>
-</div>
 </body>
 </html>
