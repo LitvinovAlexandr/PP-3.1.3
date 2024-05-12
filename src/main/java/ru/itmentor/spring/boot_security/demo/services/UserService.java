@@ -1,14 +1,18 @@
 package ru.itmentor.spring.boot_security.demo.services;
 
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.itmentor.spring.boot_security.demo.exceptions.NotFoundException;
 import ru.itmentor.spring.boot_security.demo.models.Role;
 import ru.itmentor.spring.boot_security.demo.models.User;
 import ru.itmentor.spring.boot_security.demo.repository.RoleRepository;
 import ru.itmentor.spring.boot_security.demo.repository.UserRepository;
 
+import javax.persistence.criteria.JoinType;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

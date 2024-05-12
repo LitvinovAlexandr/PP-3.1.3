@@ -1,9 +1,11 @@
 package ru.itmentor.spring.boot_security.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -23,17 +25,17 @@ public class User implements UserDetails {
     private String department;
     @Column(name = "salary")
     private int salary;
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username")
     private String username;
     @Column(name = "password")
     private String password;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore
     private Set<Role> roles;
 
 
@@ -131,5 +133,19 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", surname='" + surname + '\'' +
+               ", department='" + department + '\'' +
+               ", salary=" + salary +
+               ", username='" + username + '\'' +
+               ", password='" + password + '\'' +
+               ", roles=" + roles +
+               '}';
     }
 }

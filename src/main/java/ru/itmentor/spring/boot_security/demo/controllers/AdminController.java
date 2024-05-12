@@ -27,6 +27,11 @@ public class AdminController {
         this.roleService = roleService;
     }
 
+    @GetMapping
+    public String helloAdmin() {
+        return "admin";
+    }
+
     @GetMapping("/users")
     public String getAllUsers(Model model) {
         List<User> users = userService.getAllUsers();
@@ -58,11 +63,16 @@ public class AdminController {
     public String showEditUserForm(@PathVariable("id") long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "editUser";
     }
 
     @PostMapping("/editUser/{id}")
-    public String editUser(@ModelAttribute("user") User user) {
+    public String editUser(@ModelAttribute("user") User user, @RequestParam("selectedRoles") List<String> selectedRoles) {
+        Set<Role> userRoles = selectedRoles.stream()
+                .map(roleName -> roleService.findRoleByName(roleName))
+                .collect(Collectors.toSet());
+        user.setRoles(userRoles);
         userService.updateUser(user);
         return REDIRECT;
     }
